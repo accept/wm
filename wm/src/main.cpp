@@ -30,7 +30,8 @@ bool InitTrayIcon()
 	nid.uID					= 0 ;
 	nid.uFlags				= NIF_MESSAGE | NIF_ICON | NIF_TIP ;	
 	nid.uCallbackMessage	= WM_TRAY_NOTIFY;  
-	strcpy(nid.szTip,szAppName);
+	//strcpy(nid.szTip,szAppName);
+	strcpy_s(nid.szTip,sizeof(nid.szTip), szAppName);
 	nid.hIcon				= ::LoadIcon(hAppInstance,MAKEINTRESOURCE(IDI_TRAY)); 
 	
 	if (Shell_NotifyIcon (NIM_ADD,&nid) != TRUE)
@@ -135,7 +136,7 @@ void DoContextMenu()
 //
 // manage the main window
 //
-LONG WINAPI MainWndProc ( HWND    hWnd, UINT    uMsg, WPARAM  wParam, LPARAM  lParam) 
+LONG WINAPI MainWndProc ( HWND    hWnd, UINT    uMsg, WPARAM  wParam, LPARAM  lParam)
 { 
 	switch (uMsg)
 	{
@@ -152,7 +153,8 @@ LONG WINAPI MainWndProc ( HWND    hWnd, UINT    uMsg, WPARAM  wParam, LPARAM  lP
 		}
 	}
 	
-	return DefWindowProc (hWnd, uMsg, wParam, lParam); 
+	//return DefWindowProc (hWnd, uMsg, wParam, lParam);
+	return (LONG)DefWindowProc (hWnd, uMsg, wParam, lParam);
 } 
 
 bool InitWindow()
@@ -226,8 +228,13 @@ bool Init(LPSTR lpCmdLine)
 // 
 // our main loop
 //
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) 
-{
+//int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+int WINAPI WinMain(
+	_In_		HINSTANCE	hInstance,
+	_In_opt_	HINSTANCE	hPrevInstance,
+	_In_		LPSTR		lpCmdLine,
+	_In_		int			nCmdShow
+) {
 	hAppInstance = hInstance;
 	if (!Init(lpCmdLine)) 
 	{
@@ -255,6 +262,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// remove our tray icon
 	RemoveTrayIcon();
 
-    return msg.wParam;
+    //return msg.wParam;
+    return (int)msg.wParam;
 }
  
